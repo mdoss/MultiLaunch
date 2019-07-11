@@ -18,7 +18,7 @@ namespace MultiLaunch
         public Label NameLabel { get; set; }
         public ProgressBar pBar { get; set; }
         ContextMenu cm = new ContextMenu();
-        MenuItem removeProgram, runProgram, changeProgram;
+        MenuItem removeProgram, runProgram, changeProgram, openFolder;
         Form1 form1;
 
         public ProcessButton()
@@ -26,6 +26,7 @@ namespace MultiLaunch
             removeProgram = new MenuItem("Remove Program", new EventHandler(this.RemoveProgramButton_Click));
             runProgram = new MenuItem("Run", new EventHandler(this.RunProgramButton_Click));
             changeProgram = new MenuItem("Change Program", new EventHandler(this.ChangeProgramButton_Click));
+            openFolder = new MenuItem("Open in Explorer", new EventHandler(this.OpenFolderButton_Click));
             NameLabel = new Label();
             pBar = new ProgressBar();
 
@@ -60,6 +61,7 @@ namespace MultiLaunch
             BackgroundImageLayout = ImageLayout.Stretch;
             Text = "";
             cm.MenuItems.Add(runProgram);
+            cm.MenuItems.Add(openFolder);
             cm.MenuItems.Add(changeProgram);
             cm.MenuItems.Add(removeProgram);
         }
@@ -90,8 +92,20 @@ namespace MultiLaunch
             if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
             form1.RunProgramButton(this);
-            NameLabel.BringToFront();
-            NameLabel.Refresh();
+            //NameLabel.BringToFront();
+           // NameLabel.Refresh();
+        }
+
+        private void OpenFolderButton_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(FilePath))
+            {
+                Process.Start("explorer.exe", "/select, " + FilePath);
+            }
+            else
+            {
+                MessageBox.Show("Couldn't find containing folder. Did you change the path?");
+            }
         }
 
         private void ChangeProgramButton_Click(object sender, EventArgs e)

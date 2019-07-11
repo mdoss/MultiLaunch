@@ -27,8 +27,9 @@ namespace MultiLaunch
         public void RemoveProgramButton(ProcessButton button)
         {
             Controls.Remove(button);
+            procs.RemoveProcess(button);
             buttons.Remove(button);
-
+           // procs.RemoveProcess(button);
             SortButtons();
         }
 
@@ -97,6 +98,7 @@ namespace MultiLaunch
             Controls.Add(newButton);
             buttons.Add(newButton);
             SortButtons();
+            procs.CheckRunning(buttons); //this is lagging drawing
         }
 
         private void NewButton_DragEnter(object sender, DragEventArgs e)
@@ -202,9 +204,14 @@ namespace MultiLaunch
             SortButtons();
         }
 
+        private void btnRunningProcsList_Click(object sender, EventArgs e)
+        {
+            procs.OpenRunningProcsList();
+        }
+
         private void btnRunningProcs_Click(object sender, EventArgs e)
         {
-            procs.OpenRunningProcs();
+            procs.OpenRunningProcesses();
         }
     }
 }
