@@ -16,6 +16,7 @@ namespace MultiLaunch
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public Label NameLabel { get; set; }
+        public ProgressBar pBar { get; set; }
         ContextMenu cm = new ContextMenu();
         MenuItem removeProgram, runProgram, changeProgram;
         Form1 form1;
@@ -26,13 +27,26 @@ namespace MultiLaunch
             runProgram = new MenuItem("Run", new EventHandler(this.RunProgramButton_Click));
             changeProgram = new MenuItem("Change Program", new EventHandler(this.ChangeProgramButton_Click));
             NameLabel = new Label();
-            NameLabel.Text = "labelTextBroke";
+            pBar = new ProgressBar();
+
+            pBar.Minimum = 0;
+            pBar.Maximum = 1;
+            pBar.Visible = false;
+
+            NameLabel.Text = "SomethingTerriblyWrongHasHappened";
+            NameLabel.Parent = this;
+            NameLabel.Click += NameLabel_LostFocus;
+            NameLabel.LostFocus += NameLabel_LostFocus;
+            NameLabel.BackColor = Color.Aqua;
+            NameLabel.ForeColor = Color.Azure;
             NameLabel.Location = new Point(0, 0);
             NameLabel.Visible = false;
-            this.ContextMenu = cm;
-            NameLabel.Click += (sender, args) => InvokeOnClick(this, args);
-            this.Controls.Add(NameLabel);
 
+            this.Resize += ProcessButton_Resize;
+            this.ContextMenu = cm;
+            //NameLabel.Click += (sender, args) => InvokeOnClick(this, args); //right click label and it sends a left click to button
+            this.Controls.Add(NameLabel);
+            this.Controls.Add(pBar);
         }
 
         public void SetProgram(string filePath)
@@ -41,6 +55,7 @@ namespace MultiLaunch
             FileName = Path.GetFileNameWithoutExtension(filePath);
             NameLabel.Text = FileName;
             NameLabel.Visible = true;
+            pBar.Visible = true;
             BackgroundImage = Icon.ExtractAssociatedIcon(filePath).ToBitmap();
             BackgroundImageLayout = ImageLayout.Stretch;
             Text = "";
@@ -49,9 +64,23 @@ namespace MultiLaunch
             cm.MenuItems.Add(removeProgram);
         }
 
+        public void SetRunning(bool running)
+        {
+            if (running)
+                pBar.Value = 1;
+            else
+                pBar.Value = 0;
+        }
+
+        private void ProcessButton_Resize(object sender, EventArgs e)
+        {
+            pBar.Width = this.Width;
+            pBar.Location = new Point(0, this.Height - pBar.Height);
+        }
+
         private void RemoveProgramButton_Click(object sender, EventArgs e)
         {
-            if(form1 == null)
+            if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
             form1.RemoveProgramButton(this);
         }
@@ -60,7 +89,9 @@ namespace MultiLaunch
         {
             if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
-            //form1.RunProgramButton(this);
+            form1.RunProgramButton(this);
+            NameLabel.BringToFront();
+            NameLabel.Refresh();
         }
 
         private void ChangeProgramButton_Click(object sender, EventArgs e)
@@ -68,6 +99,17 @@ namespace MultiLaunch
             if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
             form1.ChangeProgramButton(this);
+        }
+
+        private void NameLabel_LostFocus(object sender, EventArgs e)
+        {
+            Label lbl = sender as Label;
+            Debug.WriteLine("Bring to front");
+            Debug.WriteLine(lbl.Text);
+            Debug.WriteLine(NameLabel.Text);
+            NameLabel.ForeColor = Color.Azure;
+            NameLabel.BringToFront();
+            NameLabel.Refresh();
         }
     }
 }

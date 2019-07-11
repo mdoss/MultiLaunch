@@ -16,6 +16,7 @@ namespace MultiLaunch
         private int MAX_ROWS = 4;
         private int MAX_COLUMNS = 4;
         List<ProcessButton> buttons = new List<ProcessButton>();
+        Processes procs = new Processes();
         
         public Form1()
         {
@@ -27,6 +28,7 @@ namespace MultiLaunch
         {
             Controls.Remove(button);
             buttons.Remove(button);
+
             SortButtons();
         }
 
@@ -59,8 +61,9 @@ namespace MultiLaunch
 
         private void RunProgramButton_Click(object sender, EventArgs e)
         {
-            
-
+            ProcessButton button = sender as ProcessButton;
+            procs.RunProcess(button);
+            Refresh();
         }
 
         private void ChangeProgramButton_Click(object sender, EventArgs e)
@@ -189,9 +192,19 @@ namespace MultiLaunch
             }
         }
 
-        private void form_ResizeEnd(object sender, EventArgs e)
+        private void form_LoseFocus(object sender, EventArgs e)
+        {
+            this.Refresh();
+        }
+
+        private void form_Resize(object sender, EventArgs e)
         {
             SortButtons();
+        }
+
+        private void btnRunningProcs_Click(object sender, EventArgs e)
+        {
+            procs.OpenRunningProcs();
         }
     }
 }
