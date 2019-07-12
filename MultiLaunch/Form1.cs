@@ -15,49 +15,31 @@ namespace MultiLaunch
     {
         private int MAX_ROWS = 4;
         private int MAX_COLUMNS = 4;
-        List<ProcessButton> buttons = new List<ProcessButton>();
         Processes procs = new Processes();
         
         public Form1()
         {
             InitializeComponent();
-            AddButton();
+            if(Properties.Settings.Default.btnStringList == null)
+                Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
+            // if(Properties.Settings.Default.ListOfButtonsSettings == null)
+            //    Properties.Settings.Default.ListOfButtonsSettings = new List<ProcessButton>();
+            this.Controls.Add(new ProcessButton());
+            SortButtons(ProcessButton.GetAllButtons());
         }
 
         public void RemoveProgramButton(ProcessButton button)
         {
             Controls.Remove(button);
             procs.RemoveProcess(button);
-            buttons.Remove(button);
+            button.RemoveButton();
            // procs.RemoveProcess(button);
-            SortButtons();
-        }
-
-        public void ChangeProgramButton(ProcessButton button)
-        {
-            ChangeProgramButton_Click(button, EventArgs.Empty);
+           // SortButtons(ProcessButton.GetAllButtons());
         }
 
         public void RunProgramButton(ProcessButton button)
         {
             RunProgramButton_Click(button, EventArgs.Empty);
-        }
-
-        private void AddProgramButton_Click(object sender, EventArgs e)
-        {
-            ProcessButton button = sender as ProcessButton;
-            Debug.WriteLine(button.NameLabel);
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            openFileDialog.InitialDirectory = "c:\\MyImgur\\";
-            openFileDialog.Filter = "Executable Programs (*.exe) | *.exe";
-            openFileDialog.FilterIndex = 0;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                CreateProgramButton(button, openFileDialog.FileName);
-            }
         }
 
         private void RunProgramButton_Click(object sender, EventArgs e)
@@ -67,109 +49,7 @@ namespace MultiLaunch
             Refresh();
         }
 
-        private void ChangeProgramButton_Click(object sender, EventArgs e)
-        {
-            ProcessButton button = sender as ProcessButton;
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            openFileDialog.InitialDirectory = "c:\\MyImgur\\";
-            openFileDialog.Filter = "Executable Programs (*.exe) | *.exe";
-            openFileDialog.FilterIndex = 0;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string selectedFileName = openFileDialog.FileName;
-                button.SetProgram(selectedFileName);
-            }
-        }
-
-        private void AddButton()
-        {
-            ProcessButton newButton = new ProcessButton();
-            newButton.Location = new Point(0, 0);
-            newButton.Height = 500;
-            newButton.Width = 500;
-            newButton.Text = "Add Program";
-            newButton.AllowDrop = true;
-            newButton.DragEnter += NewButton_DragEnter;
-            newButton.DragDrop += NewButton_DragDrop;
-            newButton.Click += new EventHandler(AddProgramButton_Click);
-            Controls.Add(newButton);
-            buttons.Add(newButton);
-            SortButtons();
-            procs.CheckRunning(buttons); //this is lagging drawing
-        }
-
-        private void NewButton_DragEnter(object sender, DragEventArgs e)
-        {
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files.Length > 1)
-            {
-               //MessageBox.Show("Too many files selected");
-                return;
-            }
-            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-        }
-
-        private void NewButton_DragDrop(object sender, DragEventArgs e)
-        {
-            ProcessButton button = sender as ProcessButton;
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if(files.Length > 1)
-            {
-                MessageBox.Show("Too many files selected");
-                return;
-            }
-            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
-            {
-                CreateProgramButton(button, Path.GetFullPath(files[0]));
-            }
-            else
-            {
-                MessageBox.Show("Not an executable");
-            }
-        }
-
-        private void CreateProgramButton(ProcessButton button, string filePath)
-        {
-            string selectedFileName = filePath;
-            button.SetProgram(filePath);
-            button.Click -= new EventHandler(AddProgramButton_Click);
-            button.Click += new EventHandler(RunProgramButton_Click);
-            button.DragDrop -= NewButton_DragDrop;
-            button.DragDrop += ChangeButton_DragDrop;
-            AddButton();
-        }
-
-        private void ChangeProgramButton(ProcessButton button, string filePath)
-        {
-            button.SetProgram(filePath);
-        }
-
-        private void ChangeButton_DragDrop(object sender, DragEventArgs e)
-        {
-            ProcessButton button = sender as ProcessButton;
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files.Length > 1)
-            {
-                MessageBox.Show("Too many files selected");
-                return;
-            }
-            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
-            {
-                ChangeProgramButton(button, Path.GetFullPath(files[0]));
-            }
-            else
-            {
-                MessageBox.Show("Not an executable");
-            }
-        }
-
-        private void SortButtons()
+        public void SortButtons(List<ProcessButton> buttons)
         {
             int numRows = (buttons.Count - 1) / MAX_ROWS;
             int numCols, newX, newY;
@@ -201,7 +81,7 @@ namespace MultiLaunch
 
         private void form_Resize(object sender, EventArgs e)
         {
-            SortButtons();
+            SortButtons(ProcessButton.GetAllButtons());
         }
 
         private void btnRunningProcsList_Click(object sender, EventArgs e)
@@ -212,6 +92,32 @@ namespace MultiLaunch
         private void btnRunningProcs_Click(object sender, EventArgs e)
         {
             procs.OpenRunningProcesses();
+        }
+
+        private void btnSavedButtons_Click(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.btnStringList != null)
+            {
+                Properties.Settings.Default.btnStringList.Add("new string");
+                var list = Properties.Settings.Default.btnStringList.Cast<string>().ToList();
+                foreach (var str in list)
+                {
+                    MessageBox.Show("string :" + str);
+                }
+            }
+            //Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
+            Properties.Settings.Default.Save();
+           // ProcessButton.OpenSavedButtons();
+           // ProcessButton.SaveButtons(buttons);
+            //MessageBox.Show(Properties.Settings.Default.settingTest);
+            //  Properties.Settings.Default.settingTest = "bullshit";
+            
+         // Properties.Settings.Default.Save();
+        }
+
+        private void form_closed(object sender, FormClosedEventArgs e)
+        {
+            //Properties.Settings.Default.Save();
         }
     }
 }

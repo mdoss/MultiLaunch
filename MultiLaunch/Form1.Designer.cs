@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnRunningProcsList = new System.Windows.Forms.Button();
             this.btnRunningProcs = new System.Windows.Forms.Button();
+            this.btnSavedButtons = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnRunningProcsList
@@ -53,11 +54,22 @@
             this.btnRunningProcs.UseVisualStyleBackColor = true;
             this.btnRunningProcs.Click += new System.EventHandler(this.btnRunningProcs_Click);
             // 
+            // btnSavedButtons
+            // 
+            this.btnSavedButtons.Location = new System.Drawing.Point(401, 415);
+            this.btnSavedButtons.Name = "btnSavedButtons";
+            this.btnSavedButtons.Size = new System.Drawing.Size(138, 23);
+            this.btnSavedButtons.TabIndex = 2;
+            this.btnSavedButtons.Text = "Open saved buttons";
+            this.btnSavedButtons.UseVisualStyleBackColor = true;
+            this.btnSavedButtons.Click += new System.EventHandler(this.btnSavedButtons_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnSavedButtons);
             this.Controls.Add(this.btnRunningProcs);
             this.Controls.Add(this.btnRunningProcsList);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -65,6 +77,7 @@
             this.Text = "Scuffed Taskbar";
             this.Activated += new System.EventHandler(this.form_LoseFocus);
             this.Deactivate += new System.EventHandler(this.form_LoseFocus);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.form_closed);
             this.SizeChanged += new System.EventHandler(this.form_Resize);
             this.Leave += new System.EventHandler(this.form_LoseFocus);
             this.ResumeLayout(false);
@@ -75,6 +88,7 @@
 
         private System.Windows.Forms.Button btnRunningProcsList;
         private System.Windows.Forms.Button btnRunningProcs;
+        private System.Windows.Forms.Button btnSavedButtons;
     }
 }
 

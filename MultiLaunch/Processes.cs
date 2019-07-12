@@ -47,10 +47,6 @@ namespace MultiLaunch
             {
                 runningProcs.Remove(butInList);
             }
-            else
-            {
-                MessageBox.Show("Failed to remove process");
-            }
         }
         
         public void OpenRunningProcsList()
@@ -125,8 +121,5 @@ namespace MultiLaunch
         {
             return Process.GetProcesses().Where(p => !string.IsNullOrEmpty(p.MainWindowTitle)).ToList();
         }
-
-
-
     }
 }

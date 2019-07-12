@@ -22,5 +22,53 @@ namespace MultiLaunch.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<MultiLaunch.ProcessButton> ListOfButtonsSettings {
+            get {
+                return ((global::System.Collections.Generic.List<MultiLaunch.ProcessButton>)(this["ListOfButtonsSettings"]));
+            }
+            set {
+                this["ListOfButtonsSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("bullshit")]
+        public string settingTest {
+            get {
+                return ((string)(this["settingTest"]));
+            }
+            set {
+                this["settingTest"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string buttons {
+            get {
+                return ((string)(this["buttons"]));
+            }
+            set {
+                this["buttons"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection btnStringList {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["btnStringList"]));
+            }
+            set {
+                this["btnStringList"] = value;
+            }
+        }
     }
 }

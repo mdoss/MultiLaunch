@@ -8,17 +8,22 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MultiLaunch
 {
+    [Serializable()]
     public class ProcessButton : Button
     {
+        private static List<ProcessButton> buttons = new List<ProcessButton>();
+
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public Label NameLabel { get; set; }
         public ProgressBar pBar { get; set; }
         ContextMenu cm = new ContextMenu();
         MenuItem removeProgram, runProgram, changeProgram, openFolder;
+
         Form1 form1;
 
         public ProcessButton()
@@ -36,19 +41,28 @@ namespace MultiLaunch
 
             NameLabel.Text = "SomethingTerriblyWrongHasHappened";
             NameLabel.Parent = this;
-            NameLabel.Click += NameLabel_LostFocus;
-            NameLabel.LostFocus += NameLabel_LostFocus;
+           // NameLabel.Click += NameLabel_LostFocus;
+          //  NameLabel.LostFocus += NameLabel_LostFocus;
             NameLabel.BackColor = Color.Aqua;
             NameLabel.ForeColor = Color.Azure;
             NameLabel.Location = new Point(0, 0);
             NameLabel.Visible = false;
 
+            this.Text = "Add Program";
+            this.AllowDrop = true;
+            this.DragEnter += NewButton_DragEnter;
+            this.DragDrop += NewButton_DragDrop;
+            this.Click += new EventHandler(AddProgramButton_Click);
+
+            //form1.Controls.Add(this);
+            buttons.Add(this);
+           // SortButtons();
             this.Resize += ProcessButton_Resize;
             this.ContextMenu = cm;
             //NameLabel.Click += (sender, args) => InvokeOnClick(this, args); //right click label and it sends a left click to button
             this.Controls.Add(NameLabel);
             this.Controls.Add(pBar);
-        }
+        }        
 
         public void SetProgram(string filePath)
         {
@@ -64,6 +78,7 @@ namespace MultiLaunch
             cm.MenuItems.Add(openFolder);
             cm.MenuItems.Add(changeProgram);
             cm.MenuItems.Add(removeProgram);
+            Properties.Settings.Default.btnStringList.Add(this.FilePath); 
         }
 
         public void SetRunning(bool running)
@@ -72,6 +87,49 @@ namespace MultiLaunch
                 pBar.Value = 1;
             else
                 pBar.Value = 0;
+        }
+
+        public static List<ProcessButton> GetAllButtons()
+        {
+            return buttons;
+        }
+
+        public void RemoveButton()
+        {
+            Properties.Settings.Default.btnStringList.Remove(this.FilePath);
+            buttons.Remove(this);
+            if (form1 == null)
+                form1 = (Form1)Application.OpenForms[0];
+            form1.SortButtons(buttons);
+        }
+
+        public static void OpenSavedButtons()
+        {
+            Form procForm = new Form();
+            Label dataLbl = new Label();
+            dataLbl.AutoSize = true;
+           // foreach (var data in )
+            { 
+             //  dataLbl.Text += data.FilePath + "\n";
+            }
+           // procForm.Controls.Add(dataLbl);
+            
+            procForm.Show();
+        }
+
+        private void CreateNewButton()
+        {
+            if (form1 == null)
+                form1 = (Form1)Application.OpenForms[0];
+            form1.Controls.Add(new ProcessButton());
+            form1.SortButtons(buttons);
+        }
+        
+        private void SortButtons()
+        {
+            if (form1 == null)
+                form1 = (Form1)Application.OpenForms[0];
+            form1.SortButtons(buttons);
         }
 
         private void ProcessButton_Resize(object sender, EventArgs e)
@@ -84,6 +142,7 @@ namespace MultiLaunch
         {
             if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
+            Properties.Settings.Default.btnStringList.Remove(this.FilePath);
             form1.RemoveProgramButton(this);
         }
 
@@ -108,14 +167,7 @@ namespace MultiLaunch
             }
         }
 
-        private void ChangeProgramButton_Click(object sender, EventArgs e)
-        {
-            if (form1 == null)
-                form1 = (Form1)Application.OpenForms[0];
-            form1.ChangeProgramButton(this);
-        }
-
-        private void NameLabel_LostFocus(object sender, EventArgs e)
+       /*private void NameLabel_LostFocus(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
             Debug.WriteLine("Bring to front");
@@ -124,6 +176,103 @@ namespace MultiLaunch
             NameLabel.ForeColor = Color.Azure;
             NameLabel.BringToFront();
             NameLabel.Refresh();
+        }*/
+
+        private void NewButton_DragEnter(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length > 1)
+            {
+                //MessageBox.Show("Too many files selected");
+                return;
+            }
+            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+        }
+
+        private void NewButton_DragDrop(object sender, DragEventArgs e)
+        {
+            ProcessButton button = sender as ProcessButton;
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length > 1)
+            {
+                MessageBox.Show("Too many files selected");
+                return;
+            }
+            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
+            {
+                CreateProgramButton(button, Path.GetFullPath(files[0]));
+            }
+            else
+            {
+                MessageBox.Show("Not an executable");
+            }
+        }
+
+        private void ChangeButton_DragDrop(object sender, DragEventArgs e)
+        {
+            ProcessButton button = sender as ProcessButton;
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length > 1)
+            {
+                MessageBox.Show("Too many files selected");
+                return;
+            }
+            if (Path.GetExtension(files[0]).Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.SetProgram(Path.GetFullPath(files[0]));
+            }
+            else
+            {
+                MessageBox.Show("Not an executable");
+            }
+        }
+
+        private void AddProgramButton_Click(object sender, EventArgs e)
+        {
+            ProcessButton button = sender as ProcessButton;
+            Debug.WriteLine(button.NameLabel);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.InitialDirectory = "c:\\MyImgur\\";
+            openFileDialog.Filter = "Executable Programs (*.exe) | *.exe";
+            openFileDialog.FilterIndex = 0;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                CreateProgramButton(button, openFileDialog.FileName);
+            }
+        }
+
+        private void CreateProgramButton(ProcessButton button, string filePath)
+        {
+
+            string selectedFileName = filePath;
+            button.SetProgram(filePath);
+            button.Click -= new EventHandler(AddProgramButton_Click);
+            button.Click += new EventHandler(RunProgramButton_Click);
+            button.DragDrop -= NewButton_DragDrop;
+            button.DragDrop += ChangeButton_DragDrop;
+            CreateNewButton();
+        }
+
+        private void ChangeProgramButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.InitialDirectory = "c:\\MyImgur\\";
+            openFileDialog.Filter = "Executable Programs (*.exe) | *.exe";
+            openFileDialog.FilterIndex = 0;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string selectedFileName = openFileDialog.FileName;
+                SetProgram(selectedFileName);
+            }
         }
     }
 }
