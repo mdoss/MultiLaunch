@@ -22,6 +22,7 @@ namespace MultiLaunch
             InitializeComponent();
             if(Properties.Settings.Default.btnStringList == null)
                 Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
+            LoadSavedButtons();
             // if(Properties.Settings.Default.ListOfButtonsSettings == null)
             //    Properties.Settings.Default.ListOfButtonsSettings = new List<ProcessButton>();
             this.Controls.Add(new ProcessButton());
@@ -74,6 +75,18 @@ namespace MultiLaunch
             }
         }
 
+        private void LoadSavedButtons()
+        {
+            var btnStringList = Properties.Settings.Default.btnStringList.Cast<string>().ToList();
+            Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
+            foreach (var filePath in btnStringList)
+            {
+                var button = new ProcessButton();
+                button.LoadProgramButton(filePath);
+                Controls.Add(button);
+            }
+        }
+
         private void form_LoseFocus(object sender, EventArgs e)
         {
             this.Refresh();
@@ -96,14 +109,15 @@ namespace MultiLaunch
 
         private void btnSavedButtons_Click(object sender, EventArgs e)
         {
+            string result = "";
             if (Properties.Settings.Default.btnStringList != null)
             {
-                Properties.Settings.Default.btnStringList.Add("new string");
                 var list = Properties.Settings.Default.btnStringList.Cast<string>().ToList();
                 foreach (var str in list)
                 {
-                    MessageBox.Show("string :" + str);
+                    result += str + "\n";
                 }
+                MessageBox.Show(result);
             }
             //Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
             Properties.Settings.Default.Save();
@@ -117,7 +131,12 @@ namespace MultiLaunch
 
         private void form_closed(object sender, FormClosedEventArgs e)
         {
-            //Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save();
+        }
+
+        private void btnRefreshSaved_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.btnStringList.Clear();
         }
     }
 }

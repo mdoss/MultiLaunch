@@ -32,6 +32,7 @@
             this.btnRunningProcsList = new System.Windows.Forms.Button();
             this.btnRunningProcs = new System.Windows.Forms.Button();
             this.btnSavedButtons = new System.Windows.Forms.Button();
+            this.btnRefreshSaved = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnRunningProcsList
@@ -64,11 +65,22 @@
             this.btnSavedButtons.UseVisualStyleBackColor = true;
             this.btnSavedButtons.Click += new System.EventHandler(this.btnSavedButtons_Click);
             // 
+            // btnRefreshSaved
+            // 
+            this.btnRefreshSaved.Location = new System.Drawing.Point(257, 415);
+            this.btnRefreshSaved.Name = "btnRefreshSaved";
+            this.btnRefreshSaved.Size = new System.Drawing.Size(138, 23);
+            this.btnRefreshSaved.TabIndex = 3;
+            this.btnRefreshSaved.Text = "Refresh saved buttons";
+            this.btnRefreshSaved.UseVisualStyleBackColor = true;
+            this.btnRefreshSaved.Click += new System.EventHandler(this.btnRefreshSaved_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnRefreshSaved);
             this.Controls.Add(this.btnSavedButtons);
             this.Controls.Add(this.btnRunningProcs);
             this.Controls.Add(this.btnRunningProcsList);
@@ -89,6 +101,7 @@
         private System.Windows.Forms.Button btnRunningProcsList;
         private System.Windows.Forms.Button btnRunningProcs;
         private System.Windows.Forms.Button btnSavedButtons;
+        private System.Windows.Forms.Button btnRefreshSaved;
     }
 }
 

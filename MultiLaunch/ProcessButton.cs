@@ -66,6 +66,8 @@ namespace MultiLaunch
 
         public void SetProgram(string filePath)
         {
+            if (IsAlreadyLoaded(filePath))
+                return;
             FilePath = filePath;
             FileName = Path.GetFileNameWithoutExtension(filePath);
             NameLabel.Text = FileName;
@@ -115,6 +117,27 @@ namespace MultiLaunch
            // procForm.Controls.Add(dataLbl);
             
             procForm.Show();
+        }
+
+        public void LoadProgramButton(string filePath)
+        {
+            if (IsAlreadyLoaded(filePath))
+                return;
+            this.SetProgram(filePath);
+            this.Click -= new EventHandler(AddProgramButton_Click);
+            this.Click += new EventHandler(RunProgramButton_Click);
+            this.DragDrop -= NewButton_DragDrop;
+            this.DragDrop += ChangeButton_DragDrop;
+        }
+
+        private bool IsAlreadyLoaded(string filePath)
+        {
+            foreach(var button in buttons)
+            {
+                if(button.FilePath == filePath)
+                    return true;
+            }
+            return false;
         }
 
         private void CreateNewButton()
@@ -249,8 +272,8 @@ namespace MultiLaunch
 
         private void CreateProgramButton(ProcessButton button, string filePath)
         {
-
-            string selectedFileName = filePath;
+            if (IsAlreadyLoaded(filePath))
+                return;
             button.SetProgram(filePath);
             button.Click -= new EventHandler(AddProgramButton_Click);
             button.Click += new EventHandler(RunProgramButton_Click);
