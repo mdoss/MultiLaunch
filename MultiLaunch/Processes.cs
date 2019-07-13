@@ -40,6 +40,12 @@ namespace MultiLaunch
             return true;
         }
 
+        public void StopProcess(ProcessButton button)
+        {
+            var toKill = isButtonInList(button);
+            toKill.Item1.Kill();
+        }
+
         public void RemoveProcess(ProcessButton button)
         {
             var butInList = isButtonInList(button);
@@ -75,20 +81,23 @@ namespace MultiLaunch
             procForm.Show();
         }
 
-        public void CheckRunning(List<ProcessButton> buttons)
+        public void CheckRunningProcesses(List<ProcessButton> buttons) //switched to for loops because foreach loops were slowing ui
         {
-            foreach(var button in buttons)
+            Process[] running = GetRunning();
+            for(int i = 0; i < buttons.Count; i++)
             {
-                if (isButtonInList(button) != null)
+                if (isButtonInList(buttons[i]) != null)
                     continue;
-                foreach(var process in GetRunning().ToList())
+                for(int j = 0; j < running.Length; j++)
                 {
-                    if(button.FileName == process.ProcessName)
+                    if(buttons[i].FileName == running[j].ProcessName)
                     {
-                        RunProcess(button);
+                        RunProcess(buttons[i]);
+                        break;
                     }
                 }
             }
+
         }
 
         private Tuple<Process, ProcessButton> isButtonInList(ProcessButton button) //returns null if not found
@@ -117,9 +126,9 @@ namespace MultiLaunch
             }
         }
 
-        private List<Process> GetRunning()
+        private Process[] GetRunning()
         {
-            return Process.GetProcesses().Where(p => !string.IsNullOrEmpty(p.MainWindowTitle)).ToList();
+            return Process.GetProcesses().Where(p => !string.IsNullOrEmpty(p.MainWindowTitle)).ToArray();
         }
     }
 }

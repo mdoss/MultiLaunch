@@ -16,13 +16,13 @@ namespace MultiLaunch
     public class ProcessButton : Button
     {
         private static List<ProcessButton> buttons = new List<ProcessButton>();
-
+        private static Processes procs = new Processes();
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public Label NameLabel { get; set; }
         public ProgressBar pBar { get; set; }
         ContextMenu cm = new ContextMenu();
-        MenuItem removeProgram, runProgram, changeProgram, openFolder;
+        MenuItem removeProgram, runProgram, changeProgram, openFolder, stopProgram;
 
         Form1 form1;
 
@@ -30,6 +30,7 @@ namespace MultiLaunch
         {
             removeProgram = new MenuItem("Remove Program", new EventHandler(this.RemoveProgramButton_Click));
             runProgram = new MenuItem("Run", new EventHandler(this.RunProgramButton_Click));
+            stopProgram = new MenuItem("Stop", new EventHandler(this.StopProgramButton_Click));
             changeProgram = new MenuItem("Change Program", new EventHandler(this.ChangeProgramButton_Click));
             openFolder = new MenuItem("Open in Explorer", new EventHandler(this.OpenFolderButton_Click));
             NameLabel = new Label();
@@ -77,6 +78,7 @@ namespace MultiLaunch
             BackgroundImageLayout = ImageLayout.Stretch;
             Text = "";
             cm.MenuItems.Add(runProgram);
+            cm.MenuItems.Add(stopProgram);
             cm.MenuItems.Add(openFolder);
             cm.MenuItems.Add(changeProgram);
             cm.MenuItems.Add(removeProgram);
@@ -98,25 +100,12 @@ namespace MultiLaunch
 
         public void RemoveButton()
         {
+            procs.RemoveProcess(this);
             Properties.Settings.Default.btnStringList.Remove(this.FilePath);
             buttons.Remove(this);
             if (form1 == null)
                 form1 = (Form1)Application.OpenForms[0];
             form1.SortButtons(buttons);
-        }
-
-        public static void OpenSavedButtons()
-        {
-            Form procForm = new Form();
-            Label dataLbl = new Label();
-            dataLbl.AutoSize = true;
-           // foreach (var data in )
-            { 
-             //  dataLbl.Text += data.FilePath + "\n";
-            }
-           // procForm.Controls.Add(dataLbl);
-            
-            procForm.Show();
         }
 
         public void LoadProgramButton(string filePath)
@@ -128,6 +117,21 @@ namespace MultiLaunch
             this.Click += new EventHandler(RunProgramButton_Click);
             this.DragDrop -= NewButton_DragDrop;
             this.DragDrop += ChangeButton_DragDrop;
+        }
+
+        public static void CheckRunning()
+        {
+            procs.CheckRunningProcesses(buttons);
+        }
+        
+        public static void OpenRunningProcList()
+        {
+            procs.OpenRunningProcsList();
+        }
+
+        public static void OpenRunningProcesses()
+        {
+            procs.OpenRunningProcesses();
         }
 
         private bool IsAlreadyLoaded(string filePath)
@@ -171,11 +175,15 @@ namespace MultiLaunch
 
         private void RunProgramButton_Click(object sender, EventArgs e)
         {
-            if (form1 == null)
-                form1 = (Form1)Application.OpenForms[0];
-            form1.RunProgramButton(this);
-            //NameLabel.BringToFront();
-           // NameLabel.Refresh();
+            ProcessButton button = sender as ProcessButton;
+            procs.RunProcess(button);
+            Refresh();
+        }
+
+        private void StopProgramButton_Click(object sender, EventArgs e)
+        {
+            procs.StopProcess(this);
+            Refresh();
         }
 
         private void OpenFolderButton_Click(object sender, EventArgs e)
