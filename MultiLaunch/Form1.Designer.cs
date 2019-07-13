@@ -28,15 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnRunningProcsList = new System.Windows.Forms.Button();
             this.btnRunningProcs = new System.Windows.Forms.Button();
             this.btnSavedButtons = new System.Windows.Forms.Button();
             this.btnRefreshSaved = new System.Windows.Forms.Button();
+            this.timerCheckRunning = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // btnRunningProcsList
             // 
+            this.btnRunningProcsList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRunningProcsList.Location = new System.Drawing.Point(689, 415);
             this.btnRunningProcsList.Name = "btnRunningProcsList";
             this.btnRunningProcsList.Size = new System.Drawing.Size(99, 23);
@@ -47,6 +50,7 @@
             // 
             // btnRunningProcs
             // 
+            this.btnRunningProcs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRunningProcs.Location = new System.Drawing.Point(545, 415);
             this.btnRunningProcs.Name = "btnRunningProcs";
             this.btnRunningProcs.Size = new System.Drawing.Size(138, 23);
@@ -57,6 +61,7 @@
             // 
             // btnSavedButtons
             // 
+            this.btnSavedButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSavedButtons.Location = new System.Drawing.Point(401, 415);
             this.btnSavedButtons.Name = "btnSavedButtons";
             this.btnSavedButtons.Size = new System.Drawing.Size(138, 23);
@@ -67,6 +72,7 @@
             // 
             // btnRefreshSaved
             // 
+            this.btnRefreshSaved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRefreshSaved.Location = new System.Drawing.Point(257, 415);
             this.btnRefreshSaved.Name = "btnRefreshSaved";
             this.btnRefreshSaved.Size = new System.Drawing.Size(138, 23);
@@ -74,6 +80,11 @@
             this.btnRefreshSaved.Text = "Refresh saved buttons";
             this.btnRefreshSaved.UseVisualStyleBackColor = true;
             this.btnRefreshSaved.Click += new System.EventHandler(this.btnRefreshSaved_Click);
+            // 
+            // timerCheckRunning
+            // 
+            this.timerCheckRunning.Interval = 3000;
+            this.timerCheckRunning.Tick += new System.EventHandler(this.timerCheckRunning_Tick);
             // 
             // Form1
             // 
@@ -102,6 +113,7 @@
         private System.Windows.Forms.Button btnRunningProcs;
         private System.Windows.Forms.Button btnSavedButtons;
         private System.Windows.Forms.Button btnRefreshSaved;
+        private System.Windows.Forms.Timer timerCheckRunning;
     }
 }
 

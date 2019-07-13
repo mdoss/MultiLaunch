@@ -78,7 +78,6 @@ namespace MultiLaunch
             BackgroundImageLayout = ImageLayout.Stretch;
             Text = "";
             cm.MenuItems.Add(runProgram);
-            cm.MenuItems.Add(stopProgram);
             cm.MenuItems.Add(openFolder);
             cm.MenuItems.Add(changeProgram);
             cm.MenuItems.Add(removeProgram);
@@ -177,12 +176,14 @@ namespace MultiLaunch
         {
             ProcessButton button = sender as ProcessButton;
             procs.RunProcess(button);
+            cm.MenuItems.Add(1, stopProgram);
             Refresh();
         }
 
         private void StopProgramButton_Click(object sender, EventArgs e)
         {
             procs.StopProcess(this);
+            cm.MenuItems.Remove(stopProgram);
             Refresh();
         }
 

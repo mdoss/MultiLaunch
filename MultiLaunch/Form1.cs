@@ -23,6 +23,7 @@ namespace MultiLaunch
             if(Properties.Settings.Default.btnStringList == null)
                 Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
             LoadSavedButtons();
+            timerCheckRunning.Start();
             // if(Properties.Settings.Default.ListOfButtonsSettings == null)
             //    Properties.Settings.Default.ListOfButtonsSettings = new List<ProcessButton>();
             this.Controls.Add(new ProcessButton());
@@ -125,6 +126,11 @@ namespace MultiLaunch
         private void btnRefreshSaved_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.btnStringList.Clear();
+        }
+
+        private void timerCheckRunning_Tick(object sender, EventArgs e) //hooking a driver function to tell when a process launched seemed like too much work, though i hate this way of checking if the process is running
+        {
+            ProcessButton.CheckRunning(); 
         }
     }
 }

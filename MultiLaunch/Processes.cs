@@ -83,7 +83,7 @@ namespace MultiLaunch
 
         public void CheckRunningProcesses(List<ProcessButton> buttons) //switched to for loops because foreach loops were slowing ui
         {
-            Process[] running = GetRunning();
+            Process[] running = GetRunning(); 
             for(int i = 0; i < buttons.Count; i++)
             {
                 if (isButtonInList(buttons[i]) != null)
