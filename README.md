@@ -25,3 +25,7 @@ Click on a program to run that program, a green loading bar shows its running.
 Right click a program to see more options.
 Don't touch the debug button or it sends me all your crypto.
 ```
+
+## Preview
+
+![](https://media.giphy.com/media/Us4ER5x5QKh5M9ZUHo/giphy.gif)
