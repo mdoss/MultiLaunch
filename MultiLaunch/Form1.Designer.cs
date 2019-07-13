@@ -30,71 +30,45 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.btnRunningProcsList = new System.Windows.Forms.Button();
-            this.btnRunningProcs = new System.Windows.Forms.Button();
-            this.btnSavedButtons = new System.Windows.Forms.Button();
-            this.btnRefreshSaved = new System.Windows.Forms.Button();
             this.timerCheckRunning = new System.Windows.Forms.Timer(this.components);
+            this.btnDebugButtons = new System.Windows.Forms.Button();
+            this.btnCloseAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // btnRunningProcsList
-            // 
-            this.btnRunningProcsList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRunningProcsList.Location = new System.Drawing.Point(689, 415);
-            this.btnRunningProcsList.Name = "btnRunningProcsList";
-            this.btnRunningProcsList.Size = new System.Drawing.Size(99, 23);
-            this.btnRunningProcsList.TabIndex = 0;
-            this.btnRunningProcsList.Text = "Open process list";
-            this.btnRunningProcsList.UseVisualStyleBackColor = true;
-            this.btnRunningProcsList.Click += new System.EventHandler(this.btnRunningProcsList_Click);
-            // 
-            // btnRunningProcs
-            // 
-            this.btnRunningProcs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRunningProcs.Location = new System.Drawing.Point(545, 415);
-            this.btnRunningProcs.Name = "btnRunningProcs";
-            this.btnRunningProcs.Size = new System.Drawing.Size(138, 23);
-            this.btnRunningProcs.TabIndex = 1;
-            this.btnRunningProcs.Text = "Open running processes";
-            this.btnRunningProcs.UseVisualStyleBackColor = true;
-            this.btnRunningProcs.Click += new System.EventHandler(this.btnRunningProcs_Click);
-            // 
-            // btnSavedButtons
-            // 
-            this.btnSavedButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSavedButtons.Location = new System.Drawing.Point(401, 415);
-            this.btnSavedButtons.Name = "btnSavedButtons";
-            this.btnSavedButtons.Size = new System.Drawing.Size(138, 23);
-            this.btnSavedButtons.TabIndex = 2;
-            this.btnSavedButtons.Text = "Open saved buttons";
-            this.btnSavedButtons.UseVisualStyleBackColor = true;
-            this.btnSavedButtons.Click += new System.EventHandler(this.btnSavedButtons_Click);
-            // 
-            // btnRefreshSaved
-            // 
-            this.btnRefreshSaved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshSaved.Location = new System.Drawing.Point(257, 415);
-            this.btnRefreshSaved.Name = "btnRefreshSaved";
-            this.btnRefreshSaved.Size = new System.Drawing.Size(138, 23);
-            this.btnRefreshSaved.TabIndex = 3;
-            this.btnRefreshSaved.Text = "Refresh saved buttons";
-            this.btnRefreshSaved.UseVisualStyleBackColor = true;
-            this.btnRefreshSaved.Click += new System.EventHandler(this.btnRefreshSaved_Click);
             // 
             // timerCheckRunning
             // 
             this.timerCheckRunning.Interval = 3000;
             this.timerCheckRunning.Tick += new System.EventHandler(this.timerCheckRunning_Tick);
             // 
+            // btnDebugButtons
+            // 
+            this.btnDebugButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDebugButtons.Location = new System.Drawing.Point(675, 415);
+            this.btnDebugButtons.Name = "btnDebugButtons";
+            this.btnDebugButtons.Size = new System.Drawing.Size(113, 23);
+            this.btnDebugButtons.TabIndex = 9;
+            this.btnDebugButtons.Text = "Open debug buttons";
+            this.btnDebugButtons.UseVisualStyleBackColor = true;
+            this.btnDebugButtons.Click += new System.EventHandler(this.btnDebugButtons_Click);
+            // 
+            // btnCloseAll
+            // 
+            this.btnCloseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCloseAll.Location = new System.Drawing.Point(12, 415);
+            this.btnCloseAll.Name = "btnCloseAll";
+            this.btnCloseAll.Size = new System.Drawing.Size(57, 23);
+            this.btnCloseAll.TabIndex = 10;
+            this.btnCloseAll.Text = "Close all";
+            this.btnCloseAll.UseVisualStyleBackColor = true;
+            this.btnCloseAll.Click += new System.EventHandler(this.btnCloseAll_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnRefreshSaved);
-            this.Controls.Add(this.btnSavedButtons);
-            this.Controls.Add(this.btnRunningProcs);
-            this.Controls.Add(this.btnRunningProcsList);
+            this.Controls.Add(this.btnCloseAll);
+            this.Controls.Add(this.btnDebugButtons);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Scuffed Taskbar";
@@ -109,11 +83,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnRunningProcsList;
-        private System.Windows.Forms.Button btnRunningProcs;
-        private System.Windows.Forms.Button btnSavedButtons;
-        private System.Windows.Forms.Button btnRefreshSaved;
         private System.Windows.Forms.Timer timerCheckRunning;
+        private System.Windows.Forms.Button btnDebugButtons;
+        private System.Windows.Forms.Button btnCloseAll;
     }
 }
 

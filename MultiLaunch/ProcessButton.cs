@@ -42,10 +42,8 @@ namespace MultiLaunch
 
             NameLabel.Text = "SomethingTerriblyWrongHasHappened";
             NameLabel.Parent = this;
-           // NameLabel.Click += NameLabel_LostFocus;
-          //  NameLabel.LostFocus += NameLabel_LostFocus;
-            NameLabel.BackColor = Color.Aqua;
-            NameLabel.ForeColor = Color.Azure;
+            NameLabel.BackColor = Color.Black;
+            NameLabel.ForeColor = Color.White;
             NameLabel.Location = new Point(0, 0);
             NameLabel.Visible = false;
 
@@ -55,12 +53,9 @@ namespace MultiLaunch
             this.DragDrop += NewButton_DragDrop;
             this.Click += new EventHandler(AddProgramButton_Click);
 
-            //form1.Controls.Add(this);
             buttons.Add(this);
-           // SortButtons();
             this.Resize += ProcessButton_Resize;
             this.ContextMenu = cm;
-            //NameLabel.Click += (sender, args) => InvokeOnClick(this, args); //right click label and it sends a left click to button
             this.Controls.Add(NameLabel);
             this.Controls.Add(pBar);
         }        
@@ -81,15 +76,22 @@ namespace MultiLaunch
             cm.MenuItems.Add(openFolder);
             cm.MenuItems.Add(changeProgram);
             cm.MenuItems.Add(removeProgram);
-            Properties.Settings.Default.btnStringList.Add(this.FilePath); 
+            Properties.Settings.Default.btnStringList.Add(this.FilePath);
+            Properties.Settings.Default.Save();
         }
 
         public void SetRunning(bool running)
         {
             if (running)
+            {
                 pBar.Value = 1;
+                cm.MenuItems.Add(1, stopProgram);
+            }
             else
+            {
                 pBar.Value = 0;
+                cm.MenuItems.Remove(stopProgram);
+            }
         }
 
         public static List<ProcessButton> GetAllButtons()
@@ -121,6 +123,11 @@ namespace MultiLaunch
         public static void CheckRunning()
         {
             procs.CheckRunningProcesses(buttons);
+        }
+
+        public static void CloseAll()
+        {
+            procs.StopAllRunning();
         }
         
         public static void OpenRunningProcList()
@@ -174,16 +181,18 @@ namespace MultiLaunch
 
         private void RunProgramButton_Click(object sender, EventArgs e)
         {
-            ProcessButton button = sender as ProcessButton;
-            procs.RunProcess(button);
-            cm.MenuItems.Add(1, stopProgram);
-            Refresh();
+            if (!procs.isAlreadyRunning(this))
+            {
+                procs.RunProcess(this);
+                Refresh();
+            }
+            else
+                Debug.WriteLine(this.FileName + " is already running");
         }
 
         private void StopProgramButton_Click(object sender, EventArgs e)
         {
             procs.StopProcess(this);
-            cm.MenuItems.Remove(stopProgram);
             Refresh();
         }
 
@@ -198,17 +207,6 @@ namespace MultiLaunch
                 MessageBox.Show("Couldn't find containing folder. Did you change the path?");
             }
         }
-
-       /*private void NameLabel_LostFocus(object sender, EventArgs e)
-        {
-            Label lbl = sender as Label;
-            Debug.WriteLine("Bring to front");
-            Debug.WriteLine(lbl.Text);
-            Debug.WriteLine(NameLabel.Text);
-            NameLabel.ForeColor = Color.Azure;
-            NameLabel.BringToFront();
-            NameLabel.Refresh();
-        }*/
 
         private void NewButton_DragEnter(object sender, DragEventArgs e)
         {
@@ -268,7 +266,7 @@ namespace MultiLaunch
             Debug.WriteLine(button.NameLabel);
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
-            openFileDialog.InitialDirectory = "c:\\MyImgur\\";
+            openFileDialog.InitialDirectory = "c:\\";
             openFileDialog.Filter = "Executable Programs (*.exe) | *.exe";
             openFileDialog.FilterIndex = 0;
             openFileDialog.RestoreDirectory = true;

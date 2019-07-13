@@ -68,6 +68,14 @@ namespace MultiLaunch
             procForm.Show();
         }
 
+        public void StopAllRunning()
+        {
+            foreach(var proc in runningProcs)
+            {
+                proc.Item1.Kill();
+            }
+        }
+
         public void OpenRunningProcesses()
         {
             Form procForm = new Form();
@@ -79,6 +87,15 @@ namespace MultiLaunch
             }
             procForm.Controls.Add(procLbl);
             procForm.Show();
+        }
+
+        public bool isAlreadyRunning(ProcessButton button)
+        {
+            if(isButtonInList(button) == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public void CheckRunningProcesses(List<ProcessButton> buttons) //switched to for loops because foreach loops were slowing ui
@@ -97,7 +114,6 @@ namespace MultiLaunch
                     }
                 }
             }
-
         }
 
         private Tuple<Process, ProcessButton> isButtonInList(ProcessButton button) //returns null if not found

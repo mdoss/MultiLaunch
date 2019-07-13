@@ -13,10 +13,9 @@ namespace MultiLaunch
 {
     public partial class Form1 : Form
     {
-        private int MAX_ROWS = 4;
-        private int MAX_COLUMNS = 4;
-       // Processes procs = new Processes();
-        
+        private int maxRows = 4;
+        private int maxCols = 4;
+
         public Form1()
         {
             InitializeComponent();
@@ -24,8 +23,6 @@ namespace MultiLaunch
                 Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
             LoadSavedButtons();
             timerCheckRunning.Start();
-            // if(Properties.Settings.Default.ListOfButtonsSettings == null)
-            //    Properties.Settings.Default.ListOfButtonsSettings = new List<ProcessButton>();
             this.Controls.Add(new ProcessButton());
             SortButtons(ProcessButton.GetAllButtons());
         }
@@ -34,18 +31,16 @@ namespace MultiLaunch
         {
             Controls.Remove(button);
             button.RemoveButton();
-           // procs.RemoveProcess(button);
-           // SortButtons(ProcessButton.GetAllButtons());
         }
 
         public void SortButtons(List<ProcessButton> buttons)
         {
-            int numRows = (buttons.Count - 1) / MAX_ROWS;
+            int numRows = (buttons.Count - 1) / maxRows;
             int numCols, newX, newY;
-            if (buttons.Count < MAX_COLUMNS)
+            if (buttons.Count < maxCols)
                 numCols = buttons.Count;
             else
-                numCols = MAX_COLUMNS;
+                numCols = maxCols;
             int rowIndex, colIndex;
             for (int i = 0; i < buttons.Count; i++)
             {
@@ -86,51 +81,24 @@ namespace MultiLaunch
             SortButtons(ProcessButton.GetAllButtons());
         }
 
-        private void btnRunningProcsList_Click(object sender, EventArgs e)
-        {
-            ProcessButton.OpenRunningProcList();
-        }
-
-        private void btnRunningProcs_Click(object sender, EventArgs e)
-        {
-            ProcessButton.OpenRunningProcesses();
-        }
-
-        private void btnSavedButtons_Click(object sender, EventArgs e)
-        {
-            string result = "";
-            if (Properties.Settings.Default.btnStringList != null)
-            {
-                var list = Properties.Settings.Default.btnStringList.Cast<string>().ToList();
-                foreach (var str in list)
-                {
-                    result += str + "\n";
-                }
-                MessageBox.Show(result);
-            }
-            //Properties.Settings.Default.btnStringList = new System.Collections.Specialized.StringCollection();
-            Properties.Settings.Default.Save();
-           // ProcessButton.OpenSavedButtons();
-           // ProcessButton.SaveButtons(buttons);
-            //MessageBox.Show(Properties.Settings.Default.settingTest);
-            //  Properties.Settings.Default.settingTest = "bullshit";
-            
-         // Properties.Settings.Default.Save();
-        }
-
         private void form_closed(object sender, FormClosedEventArgs e)
         {
             Properties.Settings.Default.Save();
         }
 
-        private void btnRefreshSaved_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.btnStringList.Clear();
-        }
-
         private void timerCheckRunning_Tick(object sender, EventArgs e) //hooking a driver function to tell when a process launched seemed like too much work, though i hate this way of checking if the process is running
         {
             ProcessButton.CheckRunning(); 
+        }
+
+        private void btnDebugButtons_Click(object sender, EventArgs e)
+        {
+            new DebugForm().Show();
+        }
+
+        private void btnCloseAll_Click(object sender, EventArgs e)
+        {
+            ProcessButton.CloseAll();
         }
     }
 }
